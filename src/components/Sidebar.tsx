@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
     {
@@ -48,46 +50,92 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 border-r border-black/10 bg-white flex flex-col">
-      {/* Logo */}
-      <div className="border-b border-black/10 px-6 py-6">
-        <Link href="/">
-          <h1 className="text-2xl font-bold tracking-tight hover:opacity-70 transition-opacity cursor-pointer">
-            Strudel
-          </h1>
-        </Link>
-      </div>
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-black/10 rounded-lg hover:bg-black/5"
+        aria-label="Toggle menu"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          {isOpen ? (
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          ) : (
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          )}
+        </svg>
+      </button>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-6">
-        <ul className="space-y-2">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    isActive
-                      ? "bg-black text-white"
-                      : "text-black/70 hover:bg-black/5 hover:text-black"
-                  }`}
-                >
-                  {item.icon}
-                  <span className="font-medium">{item.name}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
-      {/* Footer */}
-      <div className="border-t border-black/10 px-6 py-4">
-        <p className="text-xs text-black/40">
-          Strudel Patterns © {new Date().getFullYear()}
-        </p>
-      </div>
-    </aside>
+      {/* Sidebar */}
+      <aside
+        className={`fixed left-0 top-0 h-screen w-64 border-r border-black/10 bg-white flex flex-col z-40 transition-transform duration-300 ${
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        }`}
+      >
+        {/* Logo */}
+        <div className="border-b border-black/10 px-6 py-6">
+          <Link href="/" onClick={() => setIsOpen(false)}>
+            <h1 className="text-2xl font-bold tracking-tight hover:opacity-70 transition-opacity cursor-pointer">
+              Strudel
+            </h1>
+          </Link>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-6">
+          <ul className="space-y-2">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                      isActive
+                        ? "bg-black text-white"
+                        : "text-black/70 hover:bg-black/5 hover:text-black"
+                    }`}
+                  >
+                    {item.icon}
+                    <span className="font-medium">{item.name}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Footer */}
+        <div className="border-t border-black/10 px-6 py-4">
+          <p className="text-xs text-black/40">
+            Strudel Patterns © {new Date().getFullYear()}
+          </p>
+        </div>
+      </aside>
+    </>
   );
 }

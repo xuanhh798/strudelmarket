@@ -107,28 +107,30 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-white text-black">
       {/* Header */}
       <header className="border-b border-black/10 bg-white sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
-            <div className="flex items-center gap-3">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight ml-12 lg:ml-0">
+              Profile
+            </h1>
+            <div className="flex items-center gap-2 sm:gap-3">
               <Link
                 href="/upload"
-                className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
               >
                 Upload
               </Link>
               <Link
                 href="/"
-                className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+                className="hidden sm:block px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
               >
-                Browse Samples
+                Browse
               </Link>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Profile Header */}
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-4">
@@ -161,7 +163,7 @@ export default function ProfilePage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {patterns.map((pattern) => (
                 <div
                   key={pattern.id}

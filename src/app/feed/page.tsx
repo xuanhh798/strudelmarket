@@ -225,16 +225,18 @@ export default function FeedPage() {
     <div className="min-h-screen bg-white text-black">
       {/* Header */}
       <header className="border-b border-black/10 bg-white sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight">Feed</h1>
-            <div className="flex items-center gap-3">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight ml-12 lg:ml-0">
+              Feed
+            </h1>
+            <div className="flex items-center gap-2 sm:gap-3">
               {user ? (
                 <UserMenu user={user} onSignOut={() => setUser(null)} />
               ) : (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+                  className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
                 >
                   Sign In
                 </button>
@@ -244,7 +246,7 @@ export default function FeedPage() {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Create Post */}
         <div className="mb-8 border border-black/10 p-6">
           <h2 className="text-lg font-semibold mb-4">Share your thoughts</h2>

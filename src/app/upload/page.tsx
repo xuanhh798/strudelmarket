@@ -149,25 +149,25 @@ export default function UploadPage() {
     <div className="min-h-screen bg-white text-black">
       {/* Header */}
       <header className="border-b border-black/10 bg-white sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight ml-12 lg:ml-0">
               Upload Pattern
             </h1>
             <Link
               href="/"
-              className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+              className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
             >
-              Back to Samples
+              Back
             </Link>
           </div>
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">Upload Pattern</h2>
-          <p className="text-black/60">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold mb-2">Upload Pattern</h2>
+          <p className="text-sm sm:text-base text-black/60">
             Share your Strudel code patterns with the community
           </p>
         </div>
