@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module "@strudel/core" {
   export function repl(options?: any): any;
   export const controls: any;
