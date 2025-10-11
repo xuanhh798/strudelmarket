@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
 
 export default function UploadPage() {
   const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [user, setUser] = useState<any>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     category: "Drums",
@@ -17,6 +21,24 @@ export default function UploadPage() {
   });
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+      if (currentUser) {
+        setFormData((prev) => ({
+          ...prev,
+          author:
+            currentUser.user_metadata?.username ||
+            currentUser.email?.split("@")[0] ||
+            "",
+        }));
+      }
+      setIsLoadingUser(false);
+    };
+    loadUser();
+  }, []);
 
   const categories = [
     "Drums",
@@ -67,6 +89,7 @@ export default function UploadPage() {
             author: formData.author || "anonymous",
             tags: tagsArray,
             description: formData.description,
+            user_id: user?.id || null,
           },
         ])
         .select();
@@ -114,22 +137,28 @@ export default function UploadPage() {
     setFormData({ ...formData, code: pattern });
   };
 
+  if (isLoadingUser) {
+    return (
+      <div className="min-h-screen bg-white text-black flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white text-black">
       {/* Header */}
-      <header className="border-b border-black/10">
-        <div className="max-w-4xl mx-auto px-6 py-6">
+      <header className="border-b border-black/10 bg-white sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/">
-              <h1 className="text-3xl font-bold tracking-tight hover:opacity-70 transition-opacity cursor-pointer">
-                Strudel Samples
-              </h1>
-            </Link>
+            <h1 className="text-2xl font-bold tracking-tight">
+              Upload Pattern
+            </h1>
             <Link
               href="/"
               className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
             >
-              Back to Library
+              Back to Samples
             </Link>
           </div>
         </div>
@@ -137,7 +166,7 @@ export default function UploadPage() {
 
       <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">Share Your Pattern</h2>
+          <h2 className="text-2xl font-bold mb-2">Upload Pattern</h2>
           <p className="text-black/60">
             Share your Strudel code patterns with the community
           </p>
@@ -248,8 +277,16 @@ export default function UploadPage() {
                 value={formData.author}
                 onChange={handleInputChange}
                 placeholder="Your username"
-                className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors"
+                disabled={!!user}
+                className={`w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors ${
+                  user ? "bg-black/5 cursor-not-allowed" : ""
+                }`}
               />
+              {user && (
+                <p className="text-xs text-black/50 mt-1">
+                  Signed in as {user.email}
+                </p>
+              )}
             </div>
 
             {/* Tags */}

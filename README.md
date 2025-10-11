@@ -4,10 +4,17 @@ A beautiful, minimalist platform for sharing and discovering Strudel live coding
 
 ## Features
 
-- 🎵 **Play Patterns In-Browser** - Execute Strudel code directly on the page
+- 🎵 **Play Patterns** - Open patterns in Strudel REPL for immediate playback
 - 📝 **Share Your Patterns** - Upload and share your own Strudel compositions
 - 🔍 **Search & Filter** - Find patterns by category, tags, or keywords
 - 📋 **Copy Code** - One-click copy for any pattern
+- 📄 **Pattern Detail Pages** - GitHub-style code viewer with syntax highlighting
+- 💬 **Pattern Comments** - Discuss and share feedback on individual patterns
+- 🔐 **User Authentication** - Sign up/in with email or Google OAuth
+- 👤 **User Profiles** - View and manage all your uploaded patterns
+- 🗑️ **Pattern Management** - Delete your own patterns from your profile
+- 💬 **Community Feed** - Share posts and engage with the community through comments
+- 🧭 **Sidebar Navigation** - Easy access to Samples and Feed sections
 - 🎨 **Clean Black & White Design** - Minimalist, aesthetic interface
 - 💾 **Database-Backed** - Real-time pattern storage with Supabase
 
@@ -19,11 +26,18 @@ A beautiful, minimalist platform for sharing and discovering Strudel live coding
 npm install
 ```
 
-### 2. Set Up Supabase (Optional - will use demo mode without it)
+### 2. Set Up Supabase (Optional - works in demo mode without it)
 
 1. Create a free account at [supabase.com](https://supabase.com)
 2. Create a new project
-3. Run this SQL in your Supabase SQL Editor:
+3. **Enable Authentication Providers:**
+   - Go to **Authentication → Providers**
+   - Enable **Email** provider
+   - Enable **Google** provider (optional but recommended):
+     - Click on Google provider
+     - Enable it and save (you can use Supabase's default OAuth credentials for testing)
+     - For production, add your own Google OAuth client ID and secret
+4. Run this SQL in your Supabase SQL Editor:
 
 ```sql
 -- Create patterns table
@@ -35,26 +49,33 @@ CREATE TABLE patterns (
   code TEXT NOT NULL,
   author TEXT DEFAULT 'anonymous',
   tags TEXT[] DEFAULT '{}',
-  description TEXT DEFAULT ''
+  description TEXT DEFAULT '',
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Create indexes
 CREATE INDEX idx_patterns_category ON patterns(category);
 CREATE INDEX idx_patterns_created_at ON patterns(created_at DESC);
+CREATE INDEX idx_patterns_user_id ON patterns(user_id);
 
 -- Enable Row Level Security
 ALTER TABLE patterns ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access
+-- Policies
 CREATE POLICY "Allow public read access" ON patterns
   FOR SELECT USING (true);
 
--- Allow public insert access
-CREATE POLICY "Allow public insert access" ON patterns
-  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow authenticated insert" ON patterns
+  FOR INSERT WITH CHECK (auth.uid() = user_id OR user_id IS NULL);
+
+CREATE POLICY "Allow users to update own patterns" ON patterns
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Allow users to delete own patterns" ON patterns
+  FOR DELETE USING (auth.uid() = user_id);
 ```
 
-4. Create `.env.local` in the root directory:
+5. Create `.env.local` in the root directory:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
@@ -65,7 +86,7 @@ Get these from **Project Settings → API** in Supabase.
 
 ### 3. (Optional) Seed Demo Patterns
 
-Populate your database with example patterns:
+After setting up the database, populate it with example patterns:
 
 ```bash
 npm run seed

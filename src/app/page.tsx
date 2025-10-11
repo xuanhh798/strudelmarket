@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { StrudelPlayer } from "@/components/StrudelPlayer";
 import { supabase } from "@/lib/supabase";
+import { AuthModal } from "@/components/AuthModal";
+import { UserMenu } from "@/components/UserMenu";
+import { onAuthStateChange } from "@/lib/auth";
 
 interface Sample {
   id: string;
@@ -129,6 +132,9 @@ export default function Home() {
   const [samples, setSamples] = useState<Sample[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [user, setUser] = useState<any>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     const fetchPatterns = async () => {
@@ -160,6 +166,15 @@ export default function Home() {
     };
 
     fetchPatterns();
+
+    // Subscribe to auth changes
+    const { data: authListener } = onAuthStateChange((user) => {
+      setUser(user);
+    });
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
   }, []);
 
   const filteredSamples = samples.filter((sample) => {
@@ -188,18 +203,38 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white text-black">
       {/* Header */}
-      <header className="border-b border-black/10">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold tracking-tight">
-              Strudel Samples
-            </h1>
-            <Link
-              href="/upload"
-              className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
-            >
-              Share Pattern
-            </Link>
+      <header className="border-b border-black/10 bg-white sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold tracking-tight">Samples</h1>
+            <div className="flex items-center gap-3">
+              {user ? (
+                <>
+                  <Link
+                    href="/upload"
+                    className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+                  >
+                    Upload
+                  </Link>
+                  <UserMenu user={user} onSignOut={() => setUser(null)} />
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/upload"
+                    className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+                  >
+                    Upload
+                  </Link>
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+                  >
+                    Sign In
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Search Bar */}
@@ -283,9 +318,10 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredSamples.map((sample) => (
-              <div
+              <Link
                 key={sample.id}
-                className="border border-black/10 hover:border-black transition-all group cursor-pointer"
+                href={`/pattern/${sample.id}`}
+                className="border border-black/10 hover:border-black transition-all group cursor-pointer block"
               >
                 {/* Code Preview */}
                 <div className="relative h-32 overflow-hidden">
@@ -297,7 +333,11 @@ export default function Home() {
 
                   {/* Play Button Overlay */}
                   <button
-                    onClick={() => handlePlay(sample.id, sample.code)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handlePlay(sample.id, sample.code);
+                    }}
                     className="absolute top-2 right-2 w-10 h-10 border border-white/30 rounded-full flex items-center justify-center bg-black/50 hover:bg-black/70 backdrop-blur-sm transition-all group-hover:scale-110"
                     title={playingId === sample.id ? "Stop" : "Play"}
                   >
@@ -324,6 +364,7 @@ export default function Home() {
                   {/* Copy Button */}
                   <button
                     onClick={(e) => {
+                      e.preventDefault();
                       e.stopPropagation();
                       navigator.clipboard.writeText(sample.code);
                     }}
@@ -358,7 +399,7 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
@@ -414,6 +455,16 @@ export default function Home() {
           onStop={() => setPlayingId(null)}
         />
       )}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => {
+          // Refresh patterns after auth
+          window.location.reload();
+        }}
+      />
     </div>
   );
 }

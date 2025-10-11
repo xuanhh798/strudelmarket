@@ -18,6 +18,36 @@ export interface Pattern {
   author: string;
   tags: string[];
   description: string;
+  user_id: string | null;
+}
+
+export interface Post {
+  id: string;
+  created_at: string;
+  content: string;
+  user_id: string;
+  author: string;
+}
+
+export interface Comment {
+  id: string;
+  created_at: string;
+  content: string;
+  post_id: string;
+  user_id: string;
+  author: string;
+}
+
+export interface PatternComment {
+  id: string;
+  created_at: string;
+  content: string;
+  pattern_id: string;
+  user_id: string;
+  author: string;
 }
 
 export type PatternInsert = Omit<Pattern, "id" | "created_at">;
+export type PostInsert = Omit<Post, "id" | "created_at">;
+export type CommentInsert = Omit<Comment, "id" | "created_at">;
+export type PatternCommentInsert = Omit<PatternComment, "id" | "created_at">;
