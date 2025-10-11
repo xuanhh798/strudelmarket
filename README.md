@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Strudel Patterns
 
-## Getting Started
+A beautiful, minimalist platform for sharing and discovering Strudel live coding patterns. Built with Next.js, Supabase, and the Strudel audio engine.
 
-First, run the development server:
+## Features
+
+- 🎵 **Play Patterns In-Browser** - Execute Strudel code directly on the page
+- 📝 **Share Your Patterns** - Upload and share your own Strudel compositions
+- 🔍 **Search & Filter** - Find patterns by category, tags, or keywords
+- 📋 **Copy Code** - One-click copy for any pattern
+- 🎨 **Clean Black & White Design** - Minimalist, aesthetic interface
+- 💾 **Database-Backed** - Real-time pattern storage with Supabase
+
+## Quick Start
+
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Set Up Supabase (Optional - will use demo mode without it)
+
+1. Create a free account at [supabase.com](https://supabase.com)
+2. Create a new project
+3. Run this SQL in your Supabase SQL Editor:
+
+```sql
+-- Create patterns table
+CREATE TABLE patterns (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  code TEXT NOT NULL,
+  author TEXT DEFAULT 'anonymous',
+  tags TEXT[] DEFAULT '{}',
+  description TEXT DEFAULT ''
+);
+
+-- Create indexes
+CREATE INDEX idx_patterns_category ON patterns(category);
+CREATE INDEX idx_patterns_created_at ON patterns(created_at DESC);
+
+-- Enable Row Level Security
+ALTER TABLE patterns ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access
+CREATE POLICY "Allow public read access" ON patterns
+  FOR SELECT USING (true);
+
+-- Allow public insert access
+CREATE POLICY "Allow public insert access" ON patterns
+  FOR INSERT WITH CHECK (true);
+```
+
+4. Create `.env.local` in the root directory:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+Get these from **Project Settings → API** in Supabase.
+
+### 3. (Optional) Seed Demo Patterns
+
+Populate your database with example patterns:
+
+```bash
+npm run seed
+```
+
+### 4. Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo Mode
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Without Supabase configuration, the app runs in **Demo Mode** with example patterns. This is perfect for:
+
+- Testing the interface
+- Local development
+- Understanding how it works
+
+To enable real pattern storage, just add your Supabase credentials.
+
+## Tech Stack
+
+- **Next.js 15** - React framework
+- **Supabase** - PostgreSQL database
+- **Strudel** - Live coding music engine
+- **Tailwind CSS** - Styling
+- **TypeScript** - Type safety
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx          # Main patterns browser
+│   ├── upload/page.tsx   # Pattern upload form
+│   └── layout.tsx        # Root layout
+├── components/
+│   └── StrudelPlayer.tsx # Audio playback engine
+└── lib/
+    └── supabase.ts       # Database client
+```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- [Strudel Documentation](https://strudel.cc/learn)
+- [Supabase Documentation](https://supabase.com/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
