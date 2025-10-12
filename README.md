@@ -1,5 +1,7 @@
 # Strudel Patterns
 
+https://www.strudelmarket.com/
+
 A beautiful, minimalist platform for sharing and discovering Strudel live coding patterns. Built with Next.js, Supabase, and the Strudel audio engine.
 
 ## Features
