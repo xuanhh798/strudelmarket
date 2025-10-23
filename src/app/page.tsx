@@ -437,12 +437,12 @@ export default function Home() {
                 Learn
               </a>
               <a
-                href="https://github.com/tidalcycles/strudel"
+                href="https://codeberg.org/uzu/strudel/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-black transition-colors"
               >
-                GitHub
+                Codeberg
               </a>
             </div>
           </div>
