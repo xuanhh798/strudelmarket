@@ -47,7 +47,15 @@ export interface PatternComment {
   author: string;
 }
 
+export interface PatternLike {
+  id: string;
+  created_at: string;
+  pattern_id: string;
+  user_id: string;
+}
+
 export type PatternInsert = Omit<Pattern, "id" | "created_at">;
 export type PostInsert = Omit<Post, "id" | "created_at">;
 export type CommentInsert = Omit<Comment, "id" | "created_at">;
 export type PatternCommentInsert = Omit<PatternComment, "id" | "created_at">;
+export type PatternLikeInsert = Omit<PatternLike, "id" | "created_at">;

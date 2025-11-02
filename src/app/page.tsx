@@ -17,6 +17,8 @@ interface Sample {
   tags: string[];
   description: string;
   created_at?: string;
+  likes_count?: number;
+  is_liked?: boolean;
 }
 
 // Demo data for when Supabase is not configured
@@ -153,7 +155,33 @@ export default function Home() {
           setSamples(demoSamples);
           setIsDemoMode(true);
         } else {
-          setSamples(data as Sample[]);
+          // Fetch likes data
+          const { data: likesData } = await supabase
+            .from("pattern_likes")
+            .select("pattern_id, user_id");
+
+          // Count likes per pattern
+          const likesCount: { [key: string]: number } = {};
+          const userLikes = new Set<string>();
+
+          if (likesData) {
+            likesData.forEach((like) => {
+              likesCount[like.pattern_id] =
+                (likesCount[like.pattern_id] || 0) + 1;
+              if (user && like.user_id === user.id) {
+                userLikes.add(like.pattern_id);
+              }
+            });
+          }
+
+          // Add likes info to patterns
+          const patternsWithLikes = data.map((pattern) => ({
+            ...pattern,
+            likes_count: likesCount[pattern.id] || 0,
+            is_liked: userLikes.has(pattern.id),
+          }));
+
+          setSamples(patternsWithLikes as Sample[]);
           setIsDemoMode(false);
         }
       } catch (err) {
@@ -168,14 +196,19 @@ export default function Home() {
     fetchPatterns();
 
     // Subscribe to auth changes
-    const { data: authListener } = onAuthStateChange((user) => {
-      setUser(user);
+    const { data: authListener } = onAuthStateChange((authUser) => {
+      setUser(authUser);
+      // Re-fetch patterns when auth state changes to update liked status
+      if (authUser !== user) {
+        setIsLoading(true);
+        fetchPatterns();
+      }
     });
 
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, []);
+  }, [user]);
 
   const filteredSamples = samples.filter((sample) => {
     const matchesCategory =
@@ -197,6 +230,71 @@ export default function Home() {
       // Play new pattern
       setPlayingId(id);
       setPlayingCode(code);
+    }
+  };
+
+  const handleLike = async (
+    e: React.MouseEvent,
+    patternId: string,
+    isLiked: boolean
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    if (isDemoMode) {
+      alert("Likes are not available in demo mode. Please configure Supabase.");
+      return;
+    }
+
+    try {
+      if (isLiked) {
+        // Unlike
+        await supabase
+          .from("pattern_likes")
+          .delete()
+          .eq("pattern_id", patternId)
+          .eq("user_id", user.id);
+
+        // Update local state
+        setSamples(
+          samples.map((s) =>
+            s.id === patternId
+              ? {
+                  ...s,
+                  likes_count: Math.max((s.likes_count || 0) - 1, 0),
+                  is_liked: false,
+                }
+              : s
+          )
+        );
+      } else {
+        // Like
+        await supabase.from("pattern_likes").insert({
+          pattern_id: patternId,
+          user_id: user.id,
+        });
+
+        // Update local state
+        setSamples(
+          samples.map((s) =>
+            s.id === patternId
+              ? {
+                  ...s,
+                  likes_count: (s.likes_count || 0) + 1,
+                  is_liked: true,
+                }
+              : s
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      alert("Failed to update like");
     }
   };
 
@@ -390,7 +488,7 @@ export default function Home() {
                     {sample.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {sample.tags.map((tag) => (
                       <span
                         key={tag}
@@ -400,6 +498,33 @@ export default function Home() {
                       </span>
                     ))}
                   </div>
+
+                  {/* Like Button */}
+                  {!isDemoMode && (
+                    <button
+                      onClick={(e) =>
+                        handleLike(e, sample.id, sample.is_liked || false)
+                      }
+                      className="flex items-center gap-1.5 text-sm text-black/70 hover:text-black transition-colors"
+                      title={sample.is_liked ? "Unlike" : "Like"}
+                    >
+                      <svg
+                        className={`w-5 h-5 ${
+                          sample.is_liked ? "fill-black" : "fill-none"
+                        }`}
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                      <span>{sample.likes_count || 0}</span>
+                    </button>
+                  )}
                 </div>
               </Link>
             ))}

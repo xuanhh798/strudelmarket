@@ -24,6 +24,8 @@ export default function PatternDetailPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [playingCode, setPlayingCode] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
 
   const loadUser = async () => {
     const currentUser = await getCurrentUser();
@@ -53,6 +55,20 @@ export default function PatternDetailPage() {
       if (commentsError) throw commentsError;
 
       setComments(commentsData || []);
+
+      // Fetch likes
+      const { data: likesData } = await supabase
+        .from("pattern_likes")
+        .select("user_id")
+        .eq("pattern_id", patternId);
+
+      if (likesData) {
+        setLikesCount(likesData.length);
+        const currentUser = await getCurrentUser();
+        if (currentUser) {
+          setIsLiked(likesData.some((like) => like.user_id === currentUser.id));
+        }
+      }
     } catch (err) {
       console.error("Error loading pattern:", err);
       // Pattern not found, redirect to home
@@ -134,6 +150,39 @@ export default function PatternDetailPage() {
     if (pattern) {
       setPlayingCode(pattern.code);
       setIsPlaying(true);
+    }
+  };
+
+  const handleLike = async () => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    try {
+      if (isLiked) {
+        // Unlike
+        await supabase
+          .from("pattern_likes")
+          .delete()
+          .eq("pattern_id", patternId)
+          .eq("user_id", user.id);
+
+        setLikesCount(Math.max(likesCount - 1, 0));
+        setIsLiked(false);
+      } else {
+        // Like
+        await supabase.from("pattern_likes").insert({
+          pattern_id: patternId,
+          user_id: user.id,
+        });
+
+        setLikesCount(likesCount + 1);
+        setIsLiked(true);
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      alert("Failed to update like");
     }
   };
 
@@ -259,6 +308,25 @@ export default function PatternDetailPage() {
                 />
               </svg>
               Copy Code
+            </button>
+            <button
+              onClick={handleLike}
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+              title={isLiked ? "Unlike" : "Like"}
+            >
+              <svg
+                className={`w-5 h-5 ${isLiked ? "fill-current" : "fill-none"}`}
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              {isLiked ? "Liked" : "Like"} ({likesCount})
             </button>
           </div>
 

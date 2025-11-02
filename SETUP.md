@@ -156,6 +156,34 @@ CREATE POLICY "Allow users to update own pattern_comments" ON pattern_comments
 -- Create policy to allow users to delete their own pattern_comments
 CREATE POLICY "Allow users to delete own pattern_comments" ON pattern_comments
   FOR DELETE USING (auth.uid() = user_id);
+
+-- Create pattern_likes table
+CREATE TABLE pattern_likes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL,
+  pattern_id UUID REFERENCES patterns(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  UNIQUE(pattern_id, user_id)
+);
+
+-- Create indexes for pattern_likes
+CREATE INDEX idx_pattern_likes_pattern_id ON pattern_likes(pattern_id);
+CREATE INDEX idx_pattern_likes_user_id ON pattern_likes(user_id);
+
+-- Enable Row Level Security for pattern_likes
+ALTER TABLE pattern_likes ENABLE ROW LEVEL SECURITY;
+
+-- Create policy to allow public read access to pattern_likes
+CREATE POLICY "Allow public read access" ON pattern_likes
+  FOR SELECT USING (true);
+
+-- Create policy to allow authenticated users to insert pattern_likes
+CREATE POLICY "Allow authenticated insert" ON pattern_likes
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Create policy to allow users to delete their own pattern_likes
+CREATE POLICY "Allow users to delete own pattern_likes" ON pattern_likes
+  FOR DELETE USING (auth.uid() = user_id);
 ```
 
 ### 4. Configure Environment Variables
