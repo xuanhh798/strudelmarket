@@ -139,7 +139,8 @@ export default function Home() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
-    const fetchPatterns = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fetchPatterns = async (currentUser?: any) => {
       try {
         const { data, error } = await supabase
           .from("patterns")
@@ -155,23 +156,27 @@ export default function Home() {
           setSamples(demoSamples);
           setIsDemoMode(true);
         } else {
-          // Fetch likes data
-          const { data: likesData } = await supabase
-            .from("pattern_likes")
-            .select("pattern_id, user_id");
-
-          // Count likes per pattern
+          // Fetch likes data (only if table exists)
           const likesCount: { [key: string]: number } = {};
           const userLikes = new Set<string>();
 
-          if (likesData) {
-            likesData.forEach((like) => {
-              likesCount[like.pattern_id] =
-                (likesCount[like.pattern_id] || 0) + 1;
-              if (user && like.user_id === user.id) {
-                userLikes.add(like.pattern_id);
-              }
-            });
+          try {
+            const { data: likesData, error: likesError } = await supabase
+              .from("pattern_likes")
+              .select("pattern_id, user_id");
+
+            if (!likesError && likesData) {
+              likesData.forEach((like) => {
+                likesCount[like.pattern_id] =
+                  (likesCount[like.pattern_id] || 0) + 1;
+                if (currentUser && like.user_id === currentUser.id) {
+                  userLikes.add(like.pattern_id);
+                }
+              });
+            }
+          } catch (likesErr) {
+            // pattern_likes table might not exist yet, that's okay
+            console.log("Likes table not available:", likesErr);
           }
 
           // Add likes info to patterns
@@ -193,22 +198,20 @@ export default function Home() {
       }
     };
 
-    fetchPatterns();
+    fetchPatterns(user);
 
     // Subscribe to auth changes
     const { data: authListener } = onAuthStateChange((authUser) => {
       setUser(authUser);
       // Re-fetch patterns when auth state changes to update liked status
-      if (authUser !== user) {
-        setIsLoading(true);
-        fetchPatterns();
-      }
+      fetchPatterns(authUser);
     });
 
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredSamples = samples.filter((sample) => {
     const matchesCategory =
