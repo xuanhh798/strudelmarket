@@ -1,0 +1,11 @@
+--- package.json
++++ package.json
+@@ -1,7 +1,7 @@
+ {
+   "name": "strudelmarket",
+   "dependencies": {
+-    "next": "*"
++    "next": "15.5.7"
+   }
+ 
+ 
