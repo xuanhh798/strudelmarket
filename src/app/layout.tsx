@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "Strudel Patterns",
   description:
     "A curated library of Strudel code patterns and live coding samples",
+  icons: {
+    icon: "/chatgpt-favicon.png",
+  },
 };
 
 export default function RootLayout({
