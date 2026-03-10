@@ -21,6 +21,8 @@ interface Sample {
   is_liked?: boolean;
 }
 
+type SortMode = "latest" | "trending" | "most_liked";
+
 // Demo data for when Supabase is not configured
 const demoSamples: Sample[] = [
   {
@@ -31,6 +33,8 @@ const demoSamples: Sample[] = [
     author: "strudel",
     tags: ["kick", "bass", "4/4"],
     description: "Simple four-on-the-floor kick pattern",
+    likes_count: 12,
+    created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-2",
@@ -40,6 +44,8 @@ const demoSamples: Sample[] = [
     author: "strudel",
     tags: ["hihat", "groove", "fast"],
     description: "Fast hi-hat pattern for energy",
+    likes_count: 5,
+    created_at: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-3",
@@ -49,6 +55,8 @@ const demoSamples: Sample[] = [
     author: "community",
     tags: ["synth", "arpeggio", "melodic"],
     description: "Ascending synth arpeggio with filter",
+    likes_count: 25,
+    created_at: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-4",
@@ -58,6 +66,8 @@ const demoSamples: Sample[] = [
     author: "community",
     tags: ["breaks", "loop", "drum"],
     description: "Classic breakbeat with speed variations",
+    likes_count: 8,
+    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-5",
@@ -67,6 +77,8 @@ const demoSamples: Sample[] = [
     author: "strudel",
     tags: ["pad", "ambient", "slow"],
     description: "Lush ambient pad with reverb",
+    likes_count: 18,
+    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-6",
@@ -76,6 +88,8 @@ const demoSamples: Sample[] = [
     author: "strudel",
     tags: ["snare", "backbeat"],
     description: "Classic backbeat snare pattern",
+    likes_count: 3,
+    created_at: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-7",
@@ -85,6 +99,8 @@ const demoSamples: Sample[] = [
     author: "community",
     tags: ["bass", "groove", "low"],
     description: "Deep bass line with low-pass filter",
+    likes_count: 15,
+    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-8",
@@ -94,6 +110,8 @@ const demoSamples: Sample[] = [
     author: "community",
     tags: ["euclidean", "rhythm", "generative"],
     description: "3 hits distributed across 8 steps",
+    likes_count: 30,
+    created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-9",
@@ -103,6 +121,8 @@ const demoSamples: Sample[] = [
     author: "strudel",
     tags: ["chords", "progression", "jazz"],
     description: "Jazz chord progression in C minor",
+    likes_count: 7,
+    created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: "demo-10",
@@ -112,6 +132,8 @@ const demoSamples: Sample[] = [
     author: "community",
     tags: ["clap", "shuffle", "random"],
     description: "Shuffled clap pattern with randomization",
+    likes_count: 2,
+    created_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ];
 
@@ -137,6 +159,18 @@ export default function Home() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [sortMode, setSortMode] = useState<SortMode>("latest");
+
+  const getTrendingScore = (sample: Sample): number => {
+    const likes = sample.likes_count || 0;
+    const createdAt = sample.created_at ? new Date(sample.created_at).getTime() : 0;
+    const now = Date.now();
+    const ageInHours = Math.max((now - createdAt) / (1000 * 60 * 60), 1);
+
+    // Hacker News-style ranking: score / (age + 2)^1.5
+    // This balances recency with popularity
+    return likes / Math.pow(ageInHours / 24 + 2, 1.5);
+  };
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -213,16 +247,34 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const filteredSamples = samples.filter((sample) => {
-    const matchesCategory =
-      selectedCategory === "All" || sample.category === selectedCategory;
-    const matchesSearch =
-      sample.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sample.tags.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    return matchesCategory && matchesSearch;
-  });
+  const filteredSamples = samples
+    .filter((sample) => {
+      const matchesCategory =
+        selectedCategory === "All" || sample.category === selectedCategory;
+      const matchesSearch =
+        searchQuery === "" ||
+        sample.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        sample.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        sample.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        ) ||
+        sample.author.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => {
+      switch (sortMode) {
+        case "trending":
+          return getTrendingScore(b) - getTrendingScore(a);
+        case "most_liked":
+          return (b.likes_count || 0) - (a.likes_count || 0);
+        case "latest":
+        default:
+          return (
+            new Date(b.created_at || 0).getTime() -
+            new Date(a.created_at || 0).getTime()
+          );
+      }
+    });
 
   const handlePlay = (id: string, code: string) => {
     if (playingId === id) {
@@ -385,7 +437,7 @@ export default function Home() {
         )}
 
         {/* Category Filters */}
-        <div className="flex gap-2 sm:gap-3 mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-2 sm:gap-3 mb-4 sm:mb-6 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
           {categories.map((category) => (
             <button
               key={category}
@@ -397,6 +449,28 @@ export default function Home() {
               }`}
             >
               {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Sort Mode Tabs */}
+        <div className="flex items-center gap-1 mb-6 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <span className="text-sm text-black/50 mr-2 whitespace-nowrap">Sort by:</span>
+          {([
+            { key: "latest" as SortMode, label: "Latest", icon: "🕐" },
+            { key: "trending" as SortMode, label: "Trending", icon: "🔥" },
+            { key: "most_liked" as SortMode, label: "Most Liked", icon: "❤️" },
+          ]).map((mode) => (
+            <button
+              key={mode.key}
+              onClick={() => setSortMode(mode.key)}
+              className={`px-3 py-1.5 text-sm rounded-lg transition-colors whitespace-nowrap ${
+                sortMode === mode.key
+                  ? "bg-black text-white"
+                  : "bg-black/5 text-black/60 hover:bg-black/10 hover:text-black"
+              }`}
+            >
+              {mode.icon} {mode.label}
             </button>
           ))}
         </div>
