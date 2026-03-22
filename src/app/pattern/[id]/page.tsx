@@ -26,6 +26,7 @@ export default function PatternDetailPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const loadUser = async () => {
     const currentUser = await getCurrentUser();
@@ -186,6 +187,36 @@ export default function PatternDetailPage() {
     }
   };
 
+  const handleDeletePattern = async () => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this pattern? This cannot be undone.",
+      )
+    )
+      return;
+
+    setIsDeleting(true);
+    try {
+      await supabase
+        .from("pattern_comments")
+        .delete()
+        .eq("pattern_id", patternId);
+      await supabase.from("pattern_likes").delete().eq("pattern_id", patternId);
+
+      const { error } = await supabase
+        .from("patterns")
+        .delete()
+        .eq("id", patternId);
+      if (error) throw error;
+
+      router.push("/");
+    } catch (err) {
+      console.error("Error deleting pattern:", err);
+      alert("Failed to delete pattern");
+      setIsDeleting(false);
+    }
+  };
+
   const formatTimeAgo = (timestamp: string) => {
     const now = new Date();
     const past = new Date(timestamp);
@@ -328,6 +359,30 @@ export default function PatternDetailPage() {
               </svg>
               {isLiked ? "Liked" : "Like"} ({likesCount})
             </button>
+            {user && pattern.user_id === user.id && (
+              <button
+                onClick={handleDeletePattern}
+                disabled={isDeleting}
+                className={`px-4 sm:px-6 py-2 text-sm sm:text-base border border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-colors flex items-center justify-center gap-2 ${
+                  isDeleting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            )}
           </div>
 
           {/* Code Display - GitHub Style */}

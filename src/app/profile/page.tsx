@@ -86,6 +86,9 @@ export default function ProfilePage() {
     setDeletingId(id);
 
     try {
+      await supabase.from("pattern_comments").delete().eq("pattern_id", id);
+      await supabase.from("pattern_likes").delete().eq("pattern_id", id);
+
       const { error } = await supabase.from("patterns").delete().eq("id", id);
 
       if (error) throw error;
