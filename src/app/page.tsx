@@ -636,7 +636,7 @@ export default function Home() {
                       <button
                         onClick={(e) => handleDelete(e, sample.id)}
                         disabled={deletingId === sample.id}
-                        className={`text-sm text-black/40 hover:text-red-600 transition-colors ${
+                        className={`text-sm text-red-500 hover:text-red-700 transition-colors ${
                           deletingId === sample.id
                             ? "opacity-50 cursor-not-allowed"
                             : ""
