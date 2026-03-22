@@ -19,6 +19,7 @@ interface Sample {
   created_at?: string;
   likes_count?: number;
   is_liked?: boolean;
+  user_id?: string;
 }
 
 type SortMode = "latest" | "trending" | "most_liked";
@@ -160,10 +161,36 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>("latest");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!confirm("Are you sure you want to delete this pattern?")) return;
+
+    setDeletingId(id);
+    try {
+      await supabase.from("pattern_comments").delete().eq("pattern_id", id);
+      await supabase.from("pattern_likes").delete().eq("pattern_id", id);
+
+      const { error } = await supabase.from("patterns").delete().eq("id", id);
+      if (error) throw error;
+
+      setSamples(samples.filter((s) => s.id !== id));
+    } catch (error) {
+      console.error("Error deleting pattern:", error);
+      alert("Failed to delete pattern");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const getTrendingScore = (sample: Sample): number => {
     const likes = sample.likes_count || 0;
-    const createdAt = sample.created_at ? new Date(sample.created_at).getTime() : 0;
+    const createdAt = sample.created_at
+      ? new Date(sample.created_at).getTime()
+      : 0;
     const now = Date.now();
     const ageInHours = Math.max((now - createdAt) / (1000 * 60 * 60), 1);
 
@@ -256,7 +283,7 @@ export default function Home() {
         sample.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         sample.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         sample.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase())
+          tag.toLowerCase().includes(searchQuery.toLowerCase()),
         ) ||
         sample.author.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
@@ -291,7 +318,7 @@ export default function Home() {
   const handleLike = async (
     e: React.MouseEvent,
     patternId: string,
-    isLiked: boolean
+    isLiked: boolean,
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -324,8 +351,8 @@ export default function Home() {
                   likes_count: Math.max((s.likes_count || 0) - 1, 0),
                   is_liked: false,
                 }
-              : s
-          )
+              : s,
+          ),
         );
       } else {
         // Like
@@ -343,8 +370,8 @@ export default function Home() {
                   likes_count: (s.likes_count || 0) + 1,
                   is_liked: true,
                 }
-              : s
-          )
+              : s,
+          ),
         );
       }
     } catch (error) {
@@ -455,12 +482,14 @@ export default function Home() {
 
         {/* Sort Mode Tabs */}
         <div className="flex items-center gap-1 mb-6 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <span className="text-sm text-black/50 mr-2 whitespace-nowrap">Sort by:</span>
-          {([
+          <span className="text-sm text-black/50 mr-2 whitespace-nowrap">
+            Sort by:
+          </span>
+          {[
             { key: "latest" as SortMode, label: "Latest", icon: "🕐" },
             { key: "trending" as SortMode, label: "Trending", icon: "🔥" },
             { key: "most_liked" as SortMode, label: "Most Liked", icon: "❤️" },
-          ]).map((mode) => (
+          ].map((mode) => (
             <button
               key={mode.key}
               onClick={() => setSortMode(mode.key)}
@@ -576,32 +605,60 @@ export default function Home() {
                     ))}
                   </div>
 
-                  {/* Like Button */}
-                  {!isDemoMode && (
-                    <button
-                      onClick={(e) =>
-                        handleLike(e, sample.id, sample.is_liked || false)
-                      }
-                      className="flex items-center gap-1.5 text-sm text-black/70 hover:text-black transition-colors"
-                      title={sample.is_liked ? "Unlike" : "Like"}
-                    >
-                      <svg
-                        className={`w-5 h-5 ${
-                          sample.is_liked ? "fill-black" : "fill-none"
-                        }`}
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
+                  <div className="flex items-center justify-between">
+                    {/* Like Button */}
+                    {!isDemoMode && (
+                      <button
+                        onClick={(e) =>
+                          handleLike(e, sample.id, sample.is_liked || false)
+                        }
+                        className="flex items-center gap-1.5 text-sm text-black/70 hover:text-black transition-colors"
+                        title={sample.is_liked ? "Unlike" : "Like"}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                        />
-                      </svg>
-                      <span>{sample.likes_count || 0}</span>
-                    </button>
-                  )}
+                        <svg
+                          className={`w-5 h-5 ${
+                            sample.is_liked ? "fill-black" : "fill-none"
+                          }`}
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                          />
+                        </svg>
+                        <span>{sample.likes_count || 0}</span>
+                      </button>
+                    )}
+                    {user && sample.user_id === user.id && (
+                      <button
+                        onClick={(e) => handleDelete(e, sample.id)}
+                        disabled={deletingId === sample.id}
+                        className={`text-sm text-black/40 hover:text-red-600 transition-colors ${
+                          deletingId === sample.id
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                        }`}
+                        title="Delete pattern"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
                 </div>
               </Link>
             ))}
