@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { supabase, Post, Comment } from "@/lib/supabase";
 import { getCurrentUser } from "@/lib/auth";
 import { AuthModal } from "@/components/AuthModal";
@@ -23,7 +24,7 @@ export default function FeedPage() {
     [key: string]: string;
   }>({});
   const [isCommenting, setIsCommenting] = useState<{ [key: string]: boolean }>(
-    {}
+    {},
   );
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function FeedPage() {
       const postsWithComments = (postsData || []).map((post) => ({
         ...post,
         comments: (commentsData || []).filter(
-          (comment) => comment.post_id === post.id
+          (comment) => comment.post_id === post.id,
         ),
         showComments: false,
       }));
@@ -145,8 +146,8 @@ export default function FeedPage() {
           posts.map((post) =>
             post.id === postId
               ? { ...post, comments: [...post.comments, data] }
-              : post
-          )
+              : post,
+          ),
         );
         setCommentContent({ ...commentContent, [postId]: "" });
       }
@@ -163,8 +164,8 @@ export default function FeedPage() {
       posts.map((post) =>
         post.id === postId
           ? { ...post, showComments: !post.showComments }
-          : post
-      )
+          : post,
+      ),
     );
   };
 
@@ -200,8 +201,8 @@ export default function FeedPage() {
                 ...post,
                 comments: post.comments.filter((c) => c.id !== commentId),
               }
-            : post
-        )
+            : post,
+        ),
       );
     } catch (err) {
       console.error("Error deleting comment:", err);
@@ -305,7 +306,12 @@ export default function FeedPage() {
                 <div className="p-6 border-b border-black/10">
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <p className="font-semibold">{post.author}</p>
+                      <Link
+                        href={`/user/${post.user_id}`}
+                        className="font-semibold hover:underline"
+                      >
+                        {post.author}
+                      </Link>
                       <p className="text-sm text-black/50">
                         {formatTimeAgo(post.created_at)}
                       </p>
@@ -397,9 +403,12 @@ export default function FeedPage() {
                           >
                             <div className="flex items-start justify-between mb-1">
                               <div>
-                                <span className="text-sm font-semibold">
+                                <Link
+                                  href={`/user/${comment.user_id}`}
+                                  className="text-sm font-semibold hover:underline"
+                                >
                                   {comment.author}
-                                </span>
+                                </Link>
                                 <span className="text-xs text-black/50 ml-2">
                                   {formatTimeAgo(comment.created_at)}
                                 </span>
