@@ -280,7 +280,16 @@ export default function PatternDetailPage() {
                 {pattern.name}
               </h1>
               <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-black/60">
-                <span>by {pattern.author}</span>
+                {pattern.user_id ? (
+                  <Link
+                    href={`/user/${pattern.user_id}`}
+                    className="hover:text-black hover:underline transition-colors"
+                  >
+                    by {pattern.author}
+                  </Link>
+                ) : (
+                  <span>by {pattern.author}</span>
+                )}
                 <span>•</span>
                 <span className="px-2 py-1 bg-black/5 border border-black/10">
                   {pattern.category}

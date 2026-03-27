@@ -481,25 +481,25 @@ export default function Home() {
         </div>
 
         {/* Sort Mode Tabs */}
-        <div className="flex items-center gap-1 mb-6 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <span className="text-sm text-black/50 mr-2 whitespace-nowrap">
-            Sort by:
+        <div className="flex items-center gap-2 sm:gap-3 mb-6 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <span className="text-sm text-black/50 mr-1 whitespace-nowrap">
+            Sort:
           </span>
           {[
-            { key: "latest" as SortMode, label: "Latest", icon: "🕐" },
-            { key: "trending" as SortMode, label: "Trending", icon: "🔥" },
-            { key: "most_liked" as SortMode, label: "Most Liked", icon: "❤️" },
+            { key: "latest" as SortMode, label: "Latest" },
+            { key: "trending" as SortMode, label: "Trending" },
+            { key: "most_liked" as SortMode, label: "Most Liked" },
           ].map((mode) => (
             <button
               key={mode.key}
               onClick={() => setSortMode(mode.key)}
-              className={`px-3 py-1.5 text-sm rounded-lg transition-colors whitespace-nowrap ${
+              className={`px-3 sm:px-4 py-2 text-sm whitespace-nowrap transition-colors ${
                 sortMode === mode.key
                   ? "bg-black text-white"
-                  : "bg-black/5 text-black/60 hover:bg-black/10 hover:text-black"
+                  : "border border-black/20 hover:border-black"
               }`}
             >
-              {mode.icon} {mode.label}
+              {mode.label}
             </button>
           ))}
         </div>
@@ -585,9 +585,22 @@ export default function Home() {
                 <div className="p-4">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-semibold">{sample.name}</h3>
-                    <span className="text-xs text-black/50 ml-2">
-                      @{sample.author}
-                    </span>
+                    {sample.user_id ? (
+                      <span
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          window.location.href = `/user/${sample.user_id}`;
+                        }}
+                        className="text-xs text-black/50 ml-2 hover:text-black hover:underline cursor-pointer"
+                      >
+                        @{sample.author}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-black/50 ml-2">
+                        @{sample.author}
+                      </span>
+                    )}
                   </div>
 
                   <p className="text-sm text-black/60 mb-3 line-clamp-2">
