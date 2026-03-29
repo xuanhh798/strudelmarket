@@ -476,7 +476,12 @@ export default function PatternDetailPage() {
                   <div className="px-6 py-4">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <span className="font-semibold">{comment.author}</span>
+                        <Link
+                          href={`/user/${comment.user_id}`}
+                          className="font-semibold hover:underline"
+                        >
+                          {comment.author}
+                        </Link>
                         <span className="text-sm text-black/50 ml-3">
                           {formatTimeAgo(comment.created_at)}
                         </span>
