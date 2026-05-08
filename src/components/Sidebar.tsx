@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -54,7 +55,7 @@ export function Sidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-black/10 rounded-lg hover:bg-black/5"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
         aria-label="Toggle menu"
       >
         <svg
@@ -91,12 +92,12 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 border-r border-black/10 bg-white flex flex-col z-40 transition-transform duration-300 ${
+        className={`fixed left-0 top-0 h-screen w-64 border-r border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 flex flex-col z-40 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         {/* Logo */}
-        <div className="border-b border-black/10 px-6 py-6">
+        <div className="border-b border-black/10 dark:border-white/10 px-6 py-6">
           <Link href="/" onClick={() => setIsOpen(false)}>
             <h1 className="text-2xl font-bold tracking-tight hover:opacity-70 transition-opacity cursor-pointer">
               Strudel
@@ -116,8 +117,8 @@ export function Sidebar() {
                     onClick={() => setIsOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                       isActive
-                        ? "bg-black text-white"
-                        : "text-black/70 hover:bg-black/5 hover:text-black"
+                        ? "bg-black text-white dark:bg-white dark:text-black"
+                        : "text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white"
                     }`}
                   >
                     {item.icon}
@@ -129,9 +130,14 @@ export function Sidebar() {
           </ul>
         </nav>
 
+        {/* Theme Toggle */}
+        <div className="px-3 pb-3">
+          <ThemeToggle />
+        </div>
+
         {/* Footer */}
-        <div className="border-t border-black/10 px-6 py-4">
-          <p className="text-xs text-black/40">
+        <div className="border-t border-black/10 dark:border-white/10 px-6 py-4">
+          <p className="text-xs text-black/40 dark:text-white/40">
             Strudel Patterns © {new Date().getFullYear()}
           </p>
         </div>

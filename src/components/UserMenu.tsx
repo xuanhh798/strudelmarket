@@ -44,7 +44,7 @@ export function UserMenu({ user, onSignOut }: UserMenuProps) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors flex items-center gap-2"
+        className="px-4 py-2 border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors flex items-center gap-2"
       >
         <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold">
           {username[0].toUpperCase()}
@@ -53,21 +53,21 @@ export function UserMenu({ user, onSignOut }: UserMenuProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white border border-black/10 shadow-lg z-50">
-          <div className="p-4 border-b border-black/10">
+        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-950 border border-black/10 dark:border-white/10 shadow-lg z-50">
+          <div className="p-4 border-b border-black/10 dark:border-white/10">
             <p className="font-semibold truncate">{username}</p>
-            <p className="text-xs text-black/60 truncate">{user.email}</p>
+            <p className="text-xs text-black/60 dark:text-white/60 truncate">{user.email}</p>
           </div>
           <div className="p-2">
             <a
               href="/profile"
-              className="block w-full text-left px-4 py-2 hover:bg-black/5 transition-colors"
+              className="block w-full text-left px-4 py-2 hover:bg-black/5 dark:bg-white/5 transition-colors"
             >
               Profile
             </a>
             <button
               onClick={handleSignOut}
-              className="w-full text-left px-4 py-2 hover:bg-black/5 transition-colors"
+              className="w-full text-left px-4 py-2 hover:bg-black/5 dark:bg-white/5 transition-colors"
             >
               Sign Out
             </button>

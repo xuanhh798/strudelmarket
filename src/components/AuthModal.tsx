@@ -46,15 +46,15 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white max-w-md w-full border border-black">
-        <div className="border-b border-black/10 p-6">
+      <div className="bg-white dark:bg-zinc-950 max-w-md w-full border border-black dark:border-white">
+        <div className="border-b border-black/10 dark:border-white/10 p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">
               {mode === "signin" ? "Sign In" : "Sign Up"}
             </h2>
             <button
               onClick={onClose}
-              className="text-black/60 hover:text-black transition-colors"
+              className="text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -92,7 +92,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 );
               }
             }}
-            className="w-full py-3 px-4 border border-black/20 hover:border-black transition-colors flex items-center justify-center gap-3 mb-4"
+            className="w-full py-3 px-4 border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white transition-colors flex items-center justify-center gap-3 mb-4"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -117,10 +117,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
           <div className="relative mb-4">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-black/10"></div>
+              <div className="w-full border-t border-black/10 dark:border-white/10"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-black/60">
+              <span className="px-2 bg-white dark:bg-zinc-950 text-black/60 dark:text-white/60">
                 Or continue with email
               </span>
             </div>
@@ -137,7 +137,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Your username"
-                  className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors"
                 />
               </div>
             )}
@@ -150,7 +150,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors"
               />
             </div>
 
@@ -165,7 +165,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 required
                 placeholder="••••••••"
                 minLength={6}
-                className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors"
               />
             </div>
 
@@ -174,8 +174,8 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               disabled={isLoading}
               className={`w-full py-3 font-semibold transition-colors ${
                 isLoading
-                  ? "bg-black/20 text-black/40 cursor-not-allowed"
-                  : "bg-black text-white hover:bg-black/90"
+                  ? "bg-black/20 dark:bg-white/10 text-black/40 dark:text-white/40 cursor-not-allowed"
+                  : "bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
               }`}
             >
               {isLoading
@@ -187,23 +187,23 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
             <div className="text-center text-sm">
               {mode === "signin" ? (
-                <p className="text-black/60">
+                <p className="text-black/60 dark:text-white/60">
                   Don&apos;t have an account?{" "}
                   <button
                     type="button"
                     onClick={() => setMode("signup")}
-                    className="text-black font-semibold hover:underline"
+                    className="text-black dark:text-white font-semibold hover:underline"
                   >
                     Sign Up
                   </button>
                 </p>
               ) : (
-                <p className="text-black/60">
+                <p className="text-black/60 dark:text-white/60">
                   Already have an account?{" "}
                   <button
                     type="button"
                     onClick={() => setMode("signin")}
-                    className="text-black font-semibold hover:underline"
+                    className="text-black dark:text-white font-semibold hover:underline"
                   >
                     Sign In
                   </button>

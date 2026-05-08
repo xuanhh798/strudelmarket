@@ -231,7 +231,7 @@ export default function PatternDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white text-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white flex items-center justify-center">
         <p>Loading pattern...</p>
       </div>
     );
@@ -242,15 +242,15 @@ export default function PatternDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white">
       {/* Header */}
-      <header className="border-b border-black/10 bg-white sticky top-0 z-10">
+      <header className="border-b border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 href="/"
-                className="text-sm sm:text-base text-black/60 hover:text-black transition-colors ml-12 lg:ml-0"
+                className="text-sm sm:text-base text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors ml-12 lg:ml-0"
               >
                 ← Back
               </Link>
@@ -261,7 +261,7 @@ export default function PatternDetailPage() {
               ) : (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+                  className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                 >
                   Sign In
                 </button>
@@ -279,11 +279,11 @@ export default function PatternDetailPage() {
               <h1 className="text-2xl sm:text-3xl font-bold mb-2">
                 {pattern.name}
               </h1>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-black/60">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-black/60 dark:text-white/60">
                 {pattern.user_id ? (
                   <Link
                     href={`/user/${pattern.user_id}`}
-                    className="hover:text-black hover:underline transition-colors"
+                    className="hover:text-black dark:hover:text-white hover:underline transition-colors"
                   >
                     by {pattern.author}
                   </Link>
@@ -291,7 +291,7 @@ export default function PatternDetailPage() {
                   <span>by {pattern.author}</span>
                 )}
                 <span>•</span>
-                <span className="px-2 py-1 bg-black/5 border border-black/10">
+                <span className="px-2 py-1 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
                   {pattern.category}
                 </span>
                 {pattern.created_at && (
@@ -302,14 +302,14 @@ export default function PatternDetailPage() {
                 )}
               </div>
               {pattern.description && (
-                <p className="mt-3 text-black/80">{pattern.description}</p>
+                <p className="mt-3 text-black/80 dark:text-white/80">{pattern.description}</p>
               )}
               {pattern.tags && pattern.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   {pattern.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="text-xs px-2 py-1 border border-black/20 text-black/70"
+                      className="text-xs px-2 py-1 border border-black/20 dark:border-white/20 text-black/70 dark:text-white/70"
                     >
                       {tag}
                     </span>
@@ -323,7 +323,7 @@ export default function PatternDetailPage() {
           <div className="flex flex-col sm:flex-row gap-3 mb-6">
             <button
               onClick={handlePlay}
-              className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-black text-white hover:bg-black/90 transition-colors flex items-center justify-center gap-2"
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 transition-colors flex items-center justify-center gap-2"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
@@ -332,7 +332,7 @@ export default function PatternDetailPage() {
             </button>
             <button
               onClick={() => navigator.clipboard.writeText(pattern.code)}
-              className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors flex items-center justify-center gap-2"
             >
               <svg
                 className="w-4 h-4"
@@ -351,7 +351,7 @@ export default function PatternDetailPage() {
             </button>
             <button
               onClick={handleLike}
-              className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-2"
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors flex items-center justify-center gap-2"
               title={isLiked ? "Unlike" : "Like"}
             >
               <svg
@@ -395,12 +395,12 @@ export default function PatternDetailPage() {
           </div>
 
           {/* Code Display - GitHub Style */}
-          <div className="border border-black/20 rounded-lg overflow-hidden">
-            <div className="bg-black/5 px-4 py-2 border-b border-black/20 flex items-center justify-between">
+          <div className="border border-black/20 dark:border-white/20 rounded-lg overflow-hidden">
+            <div className="bg-black/5 dark:bg-white/5 px-4 py-2 border-b border-black/20 dark:border-white/20 flex items-center justify-between">
               <span className="text-sm font-semibold font-mono">
                 pattern.strudel
               </span>
-              <span className="text-xs text-black/50">
+              <span className="text-xs text-black/50 dark:text-white/50">
                 {pattern.code.split("\n").length} lines
               </span>
             </div>
@@ -413,7 +413,7 @@ export default function PatternDetailPage() {
         </div>
 
         {/* Comments Section */}
-        <div className="border-t border-black/10 pt-8">
+        <div className="border-t border-black/10 dark:border-white/10 pt-8">
           <h2 className="text-2xl font-bold mb-6">
             Comments ({comments.length})
           </h2>
@@ -421,8 +421,8 @@ export default function PatternDetailPage() {
           {/* Add Comment */}
           {user ? (
             <form onSubmit={handleAddComment} className="mb-8">
-              <div className="border border-black/20 rounded-lg overflow-hidden">
-                <div className="bg-black/5 px-4 py-2 border-b border-black/20">
+              <div className="border border-black/20 dark:border-white/20 rounded-lg overflow-hidden">
+                <div className="bg-black/5 dark:bg-white/5 px-4 py-2 border-b border-black/20 dark:border-white/20">
                   <span className="text-sm font-semibold">Add a comment</span>
                 </div>
                 <textarea
@@ -432,14 +432,14 @@ export default function PatternDetailPage() {
                   rows={4}
                   className="w-full px-4 py-3 focus:outline-none resize-none"
                 />
-                <div className="bg-black/5 px-4 py-3 border-t border-black/20 flex justify-end">
+                <div className="bg-black/5 dark:bg-white/5 px-4 py-3 border-t border-black/20 dark:border-white/20 flex justify-end">
                   <button
                     type="submit"
                     disabled={!commentContent.trim() || isCommenting}
                     className={`px-6 py-2 font-semibold transition-colors ${
                       !commentContent.trim() || isCommenting
-                        ? "bg-black/20 text-black/40 cursor-not-allowed"
-                        : "bg-black text-white hover:bg-black/90"
+                        ? "bg-black/20 dark:bg-white/10 text-black/40 dark:text-white/40 cursor-not-allowed"
+                        : "bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
                     }`}
                   >
                     {isCommenting ? "Posting..." : "Comment"}
@@ -448,11 +448,11 @@ export default function PatternDetailPage() {
               </div>
             </form>
           ) : (
-            <div className="mb-8 text-center py-8 border border-black/10 rounded-lg bg-black/5">
-              <p className="text-black/60 mb-4">Sign in to leave a comment</p>
+            <div className="mb-8 text-center py-8 border border-black/10 dark:border-white/10 rounded-lg bg-black/5 dark:bg-white/5">
+              <p className="text-black/60 dark:text-white/60 mb-4">Sign in to leave a comment</p>
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="px-6 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+                className="px-6 py-2 border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
               >
                 Sign In
               </button>
@@ -461,8 +461,8 @@ export default function PatternDetailPage() {
 
           {/* Comments List */}
           {comments.length === 0 ? (
-            <div className="text-center py-12 border border-black/10 rounded-lg">
-              <p className="text-black/40">
+            <div className="text-center py-12 border border-black/10 dark:border-white/10 rounded-lg">
+              <p className="text-black/40 dark:text-white/40">
                 No comments yet. Be the first to share your thoughts!
               </p>
             </div>
@@ -471,7 +471,7 @@ export default function PatternDetailPage() {
               {comments.map((comment) => (
                 <div
                   key={comment.id}
-                  className="border border-black/10 rounded-lg"
+                  className="border border-black/10 dark:border-white/10 rounded-lg"
                 >
                   <div className="px-6 py-4">
                     <div className="flex items-start justify-between mb-3">
@@ -482,20 +482,20 @@ export default function PatternDetailPage() {
                         >
                           {comment.author}
                         </Link>
-                        <span className="text-sm text-black/50 ml-3">
+                        <span className="text-sm text-black/50 dark:text-white/50 ml-3">
                           {formatTimeAgo(comment.created_at)}
                         </span>
                       </div>
                       {user && user.id === comment.user_id && (
                         <button
                           onClick={() => handleDeleteComment(comment.id)}
-                          className="text-sm text-black/40 hover:text-black transition-colors"
+                          className="text-sm text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors"
                         >
                           Delete
                         </button>
                       )}
                     </div>
-                    <p className="text-black/90 whitespace-pre-wrap">
+                    <p className="text-black/90 dark:text-white/90 whitespace-pre-wrap">
                       {comment.content}
                     </p>
                   </div>

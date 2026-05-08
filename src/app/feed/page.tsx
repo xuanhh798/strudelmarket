@@ -223,9 +223,9 @@ export default function FeedPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white">
       {/* Header */}
-      <header className="border-b border-black/10 bg-white sticky top-0 z-10">
+      <header className="border-b border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight ml-12 lg:ml-0">
@@ -237,7 +237,7 @@ export default function FeedPage() {
               ) : (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+                  className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                 >
                   Sign In
                 </button>
@@ -249,7 +249,7 @@ export default function FeedPage() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Create Post */}
-        <div className="mb-8 border border-black/10 p-6">
+        <div className="mb-8 border border-black/10 dark:border-white/10 p-6">
           <h2 className="text-lg font-semibold mb-4">Share your thoughts</h2>
           {user ? (
             <form onSubmit={handleCreatePost}>
@@ -258,28 +258,28 @@ export default function FeedPage() {
                 onChange={(e) => setNewPostContent(e.target.value)}
                 placeholder="What's on your mind?"
                 rows={4}
-                className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors resize-none mb-3"
+                className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors resize-none mb-3"
               />
               <button
                 type="submit"
                 disabled={!newPostContent.trim() || isPosting}
                 className={`px-6 py-2 font-semibold transition-colors ${
                   !newPostContent.trim() || isPosting
-                    ? "bg-black/20 text-black/40 cursor-not-allowed"
-                    : "bg-black text-white hover:bg-black/90"
+                    ? "bg-black/20 dark:bg-white/10 text-black/40 dark:text-white/40 cursor-not-allowed"
+                    : "bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
                 }`}
               >
                 {isPosting ? "Posting..." : "Post"}
               </button>
             </form>
           ) : (
-            <div className="text-center py-8 bg-black/5">
-              <p className="text-black/60 mb-4">
+            <div className="text-center py-8 bg-black/5 dark:bg-white/5">
+              <p className="text-black/60 dark:text-white/60 mb-4">
                 Sign in to share your thoughts
               </p>
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="px-6 py-2 border border-black hover:bg-black hover:text-white transition-colors"
+                className="px-6 py-2 border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
               >
                 Sign In
               </button>
@@ -290,20 +290,20 @@ export default function FeedPage() {
         {/* Posts List */}
         {loading ? (
           <div className="text-center py-12">
-            <p className="text-black/60">Loading posts...</p>
+            <p className="text-black/60 dark:text-white/60">Loading posts...</p>
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-12 border border-black/10">
-            <p className="text-black/60">
+          <div className="text-center py-12 border border-black/10 dark:border-white/10">
+            <p className="text-black/60 dark:text-white/60">
               No posts yet. Be the first to share!
             </p>
           </div>
         ) : (
           <div className="space-y-6">
             {posts.map((post) => (
-              <div key={post.id} className="border border-black/10">
+              <div key={post.id} className="border border-black/10 dark:border-white/10">
                 {/* Post Header */}
-                <div className="p-6 border-b border-black/10">
+                <div className="p-6 border-b border-black/10 dark:border-white/10">
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <Link
@@ -312,29 +312,29 @@ export default function FeedPage() {
                       >
                         {post.author}
                       </Link>
-                      <p className="text-sm text-black/50">
+                      <p className="text-sm text-black/50 dark:text-white/50">
                         {formatTimeAgo(post.created_at)}
                       </p>
                     </div>
                     {user && user.id === post.user_id && (
                       <button
                         onClick={() => handleDeletePost(post.id)}
-                        className="text-black/40 hover:text-black text-sm"
+                        className="text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-sm"
                       >
                         Delete
                       </button>
                     )}
                   </div>
-                  <p className="text-black/90 whitespace-pre-wrap">
+                  <p className="text-black/90 dark:text-white/90 whitespace-pre-wrap">
                     {post.content}
                   </p>
                 </div>
 
                 {/* Post Actions */}
-                <div className="px-6 py-3 bg-black/5 border-b border-black/10">
+                <div className="px-6 py-3 bg-black/5 dark:bg-white/5 border-b border-black/10 dark:border-white/10">
                   <button
                     onClick={() => toggleComments(post.id)}
-                    className="text-sm text-black/70 hover:text-black transition-colors"
+                    className="text-sm text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors"
                   >
                     {post.comments.length}{" "}
                     {post.comments.length === 1 ? "comment" : "comments"}
@@ -343,7 +343,7 @@ export default function FeedPage() {
 
                 {/* Comments Section */}
                 {post.showComments && (
-                  <div className="p-6 bg-white">
+                  <div className="p-6 bg-white dark:bg-zinc-950">
                     {/* Add Comment */}
                     {user ? (
                       <div className="mb-6">
@@ -357,7 +357,7 @@ export default function FeedPage() {
                           }
                           placeholder="Write a comment..."
                           rows={2}
-                          className="w-full px-3 py-2 text-sm border border-black/20 focus:border-black focus:outline-none transition-colors resize-none mb-2"
+                          className="w-full px-3 py-2 text-sm border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors resize-none mb-2"
                         />
                         <button
                           onClick={() => handleAddComment(post.id)}
@@ -368,19 +368,19 @@ export default function FeedPage() {
                           className={`px-4 py-1.5 text-sm font-semibold transition-colors ${
                             !commentContent[post.id]?.trim() ||
                             isCommenting[post.id]
-                              ? "bg-black/20 text-black/40 cursor-not-allowed"
-                              : "bg-black text-white hover:bg-black/90"
+                              ? "bg-black/20 dark:bg-white/10 text-black/40 dark:text-white/40 cursor-not-allowed"
+                              : "bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
                           }`}
                         >
                           {isCommenting[post.id] ? "Commenting..." : "Comment"}
                         </button>
                       </div>
                     ) : (
-                      <div className="mb-6 text-center py-4 bg-black/5">
-                        <p className="text-sm text-black/60">
+                      <div className="mb-6 text-center py-4 bg-black/5 dark:bg-white/5">
+                        <p className="text-sm text-black/60 dark:text-white/60">
                           <button
                             onClick={() => setShowAuthModal(true)}
-                            className="underline hover:text-black"
+                            className="underline hover:text-black dark:hover:text-white"
                           >
                             Sign in
                           </button>{" "}
@@ -391,7 +391,7 @@ export default function FeedPage() {
 
                     {/* Comments List */}
                     {post.comments.length === 0 ? (
-                      <p className="text-sm text-black/40 text-center py-4">
+                      <p className="text-sm text-black/40 dark:text-white/40 text-center py-4">
                         No comments yet
                       </p>
                     ) : (
@@ -399,7 +399,7 @@ export default function FeedPage() {
                         {post.comments.map((comment) => (
                           <div
                             key={comment.id}
-                            className="border-l-2 border-black/10 pl-4"
+                            className="border-l-2 border-black/10 dark:border-white/10 pl-4"
                           >
                             <div className="flex items-start justify-between mb-1">
                               <div>
@@ -409,7 +409,7 @@ export default function FeedPage() {
                                 >
                                   {comment.author}
                                 </Link>
-                                <span className="text-xs text-black/50 ml-2">
+                                <span className="text-xs text-black/50 dark:text-white/50 ml-2">
                                   {formatTimeAgo(comment.created_at)}
                                 </span>
                               </div>
@@ -418,13 +418,13 @@ export default function FeedPage() {
                                   onClick={() =>
                                     handleDeleteComment(comment.id, post.id)
                                   }
-                                  className="text-black/40 hover:text-black text-xs"
+                                  className="text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-xs"
                                 >
                                   Delete
                                 </button>
                               )}
                             </div>
-                            <p className="text-sm text-black/80">
+                            <p className="text-sm text-black/80 dark:text-white/80">
                               {comment.content}
                             </p>
                           </div>

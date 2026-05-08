@@ -219,7 +219,7 @@ export default function UserProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white text-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white flex items-center justify-center">
         <p>Loading profile...</p>
       </div>
     );
@@ -228,13 +228,13 @@ export default function UserProfilePage() {
   const displayPatterns = activeTab === "uploaded" ? patterns : likedPatterns;
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      <header className="border-b border-black/10 bg-white sticky top-0 z-10">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white">
+      <header className="border-b border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <Link
               href="/"
-              className="text-sm sm:text-base text-black/60 hover:text-black transition-colors ml-12 lg:ml-0"
+              className="text-sm sm:text-base text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors ml-12 lg:ml-0"
             >
               ← Back
             </Link>
@@ -247,7 +247,7 @@ export default function UserProfilePage() {
               ) : (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+                  className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                 >
                   Sign In
                 </button>
@@ -266,7 +266,7 @@ export default function UserProfilePage() {
             </div>
             <div>
               <h2 className="text-3xl font-bold">{profileName}</h2>
-              <div className="flex gap-4 text-sm text-black/50 mt-1">
+              <div className="flex gap-4 text-sm text-black/50 dark:text-white/50 mt-1">
                 <p>
                   {patterns.length}{" "}
                   {patterns.length === 1 ? "pattern" : "patterns"} uploaded
@@ -285,7 +285,7 @@ export default function UserProfilePage() {
               {isOwnProfile && (
                 <Link
                   href="/profile"
-                  className="inline-block mt-2 text-sm text-black/50 hover:text-black transition-colors underline"
+                  className="inline-block mt-2 text-sm text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors underline"
                 >
                   Edit profile
                 </Link>
@@ -295,32 +295,32 @@ export default function UserProfilePage() {
         </div>
 
         {/* Tabs */}
-        <div className="mb-8 border-b border-black/10">
+        <div className="mb-8 border-b border-black/10 dark:border-white/10">
           <div className="flex gap-4 sm:gap-8">
             <button
               onClick={() => setActiveTab("uploaded")}
               className={`pb-4 px-2 text-lg font-semibold transition-colors relative ${
                 activeTab === "uploaded"
-                  ? "text-black"
-                  : "text-black/40 hover:text-black/60"
+                  ? "text-black dark:text-white"
+                  : "text-black/40 dark:text-white/40 hover:text-black/60 dark:text-white/60"
               }`}
             >
               Uploaded ({patterns.length})
               {activeTab === "uploaded" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white" />
               )}
             </button>
             <button
               onClick={() => setActiveTab("liked")}
               className={`pb-4 px-2 text-lg font-semibold transition-colors relative ${
                 activeTab === "liked"
-                  ? "text-black"
-                  : "text-black/40 hover:text-black/60"
+                  ? "text-black dark:text-white"
+                  : "text-black/40 dark:text-white/40 hover:text-black/60 dark:text-white/60"
               }`}
             >
               Liked ({likedPatterns.length})
               {activeTab === "liked" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white" />
               )}
             </button>
           </div>
@@ -328,13 +328,13 @@ export default function UserProfilePage() {
 
         {/* Patterns Grid */}
         {displayPatterns.length === 0 ? (
-          <div className="text-center py-20 border border-black/10">
-            <p className="text-lg text-black/40 mb-2">
+          <div className="text-center py-20 border border-black/10 dark:border-white/10">
+            <p className="text-lg text-black/40 dark:text-white/40 mb-2">
               {activeTab === "uploaded"
                 ? "No patterns uploaded yet"
                 : "No liked patterns yet"}
             </p>
-            <p className="text-sm text-black/30">
+            <p className="text-sm text-black/30 dark:text-white/30">
               {activeTab === "uploaded"
                 ? "This user hasn't shared any patterns."
                 : "This user hasn't liked any patterns."}
@@ -346,7 +346,7 @@ export default function UserProfilePage() {
               <Link
                 key={pattern.id}
                 href={`/pattern/${pattern.id}`}
-                className="border border-black/10 hover:border-black transition-all group cursor-pointer block"
+                className="border border-black/10 dark:border-white/10 hover:border-black dark:hover:border-white transition-all group cursor-pointer block"
               >
                 {/* Code Preview */}
                 <div className="relative h-32 overflow-hidden">
@@ -403,18 +403,18 @@ export default function UserProfilePage() {
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-semibold">{pattern.name}</h3>
                     {activeTab === "liked" && (
-                      <span className="text-xs text-black/50 ml-2">
+                      <span className="text-xs text-black/50 dark:text-white/50 ml-2">
                         @{pattern.author}
                       </span>
                     )}
                     {activeTab === "uploaded" && pattern.created_at && (
-                      <span className="text-xs text-black/50 ml-2">
+                      <span className="text-xs text-black/50 dark:text-white/50 ml-2">
                         {formatTimeAgo(pattern.created_at)}
                       </span>
                     )}
                   </div>
 
-                  <p className="text-sm text-black/60 mb-3 line-clamp-2">
+                  <p className="text-sm text-black/60 dark:text-white/60 mb-3 line-clamp-2">
                     {pattern.description}
                   </p>
 
@@ -422,7 +422,7 @@ export default function UserProfilePage() {
                     {pattern.tags?.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-2 py-1 border border-black/10 text-black/70"
+                        className="text-xs px-2 py-1 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70"
                       >
                         {tag}
                       </span>
@@ -435,7 +435,7 @@ export default function UserProfilePage() {
                         onClick={(e) =>
                           handleLike(e, pattern.id, pattern.is_liked || false)
                         }
-                        className="flex items-center gap-1.5 text-sm text-black/70 hover:text-black transition-colors"
+                        className="flex items-center gap-1.5 text-sm text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors"
                         title={pattern.is_liked ? "Unlike" : "Like"}
                       >
                         <svg

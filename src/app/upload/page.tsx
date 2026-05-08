@@ -139,16 +139,16 @@ export default function UploadPage() {
 
   if (isLoadingUser) {
     return (
-      <div className="min-h-screen bg-white text-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white flex items-center justify-center">
         <p>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white">
       {/* Header */}
-      <header className="border-b border-black/10 bg-white sticky top-0 z-10">
+      <header className="border-b border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight ml-12 lg:ml-0">
@@ -156,7 +156,7 @@ export default function UploadPage() {
             </h1>
             <Link
               href="/"
-              className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+              className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
             >
               Back
             </Link>
@@ -167,13 +167,13 @@ export default function UploadPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-6 sm:mb-8">
           <h2 className="text-xl sm:text-2xl font-bold mb-2">Upload Pattern</h2>
-          <p className="text-sm sm:text-base text-black/60">
+          <p className="text-sm sm:text-base text-black/60 dark:text-white/60">
             Share your Strudel code patterns with the community
           </p>
         </div>
 
         {error && (
-          <div className="bg-black text-white px-4 py-3 border border-black">
+          <div className="bg-black text-white px-4 py-3 border border-black dark:border-white">
             <p className="text-sm">{error}</p>
           </div>
         )}
@@ -191,7 +191,7 @@ export default function UploadPage() {
                     key={idx}
                     type="button"
                     onClick={() => insertExample(pattern)}
-                    className="text-xs px-2 py-1 border border-black/20 hover:border-black transition-colors"
+                    className="text-xs px-2 py-1 border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white transition-colors"
                   >
                     Example {idx + 1}
                   </button>
@@ -199,7 +199,7 @@ export default function UploadPage() {
               </div>
             </div>
 
-            <div className="relative border border-black/20 focus-within:border-black transition-colors">
+            <div className="relative border border-black/20 dark:border-white/20 focus-within:border-black dark:focus-within:border-white transition-colors">
               <textarea
                 name="code"
                 value={formData.code}
@@ -207,20 +207,20 @@ export default function UploadPage() {
                 required
                 placeholder='sound("bd sd ~ sd").cpm(120)'
                 rows={8}
-                className="w-full px-4 py-3 font-mono text-sm focus:outline-none resize-none bg-black/5"
+                className="w-full px-4 py-3 font-mono text-sm focus:outline-none resize-none bg-black/5 dark:bg-white/5"
               />
-              <div className="absolute bottom-2 right-2 text-xs text-black/40">
+              <div className="absolute bottom-2 right-2 text-xs text-black/40 dark:text-white/40">
                 {formData.code.length} characters
               </div>
             </div>
 
-            <p className="text-xs text-black/50 mt-2">
+            <p className="text-xs text-black/50 dark:text-white/50 mt-2">
               Write your Strudel pattern using the Strudel syntax. Test it in{" "}
               <a
                 href="https://strudel.cc"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-black"
+                className="underline hover:text-black dark:hover:text-white"
               >
                 Strudel REPL
               </a>{" "}
@@ -242,7 +242,7 @@ export default function UploadPage() {
                 onChange={handleInputChange}
                 required
                 placeholder="e.g., Basic Kick Pattern"
-                className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors"
               />
             </div>
 
@@ -256,7 +256,7 @@ export default function UploadPage() {
                 value={formData.category}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors bg-white"
+                className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors bg-white dark:bg-zinc-950"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
@@ -278,12 +278,12 @@ export default function UploadPage() {
                 onChange={handleInputChange}
                 placeholder="Your username"
                 disabled={!!user}
-                className={`w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors ${
-                  user ? "bg-black/5 cursor-not-allowed" : ""
+                className={`w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors ${
+                  user ? "bg-black/5 dark:bg-white/5 cursor-not-allowed" : ""
                 }`}
               />
               {user && (
-                <p className="text-xs text-black/50 mt-1">
+                <p className="text-xs text-black/50 dark:text-white/50 mt-1">
                   Signed in as {user.email}
                 </p>
               )}
@@ -298,9 +298,9 @@ export default function UploadPage() {
                 value={formData.tags}
                 onChange={handleInputChange}
                 placeholder="kick, bass, groove (comma separated)"
-                className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors"
               />
-              <p className="text-xs text-black/50 mt-1">
+              <p className="text-xs text-black/50 dark:text-white/50 mt-1">
                 Separate tags with commas
               </p>
             </div>
@@ -316,7 +316,7 @@ export default function UploadPage() {
                 onChange={handleInputChange}
                 placeholder="Describe your pattern, how to use it, or what makes it unique..."
                 rows={4}
-                className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors resize-none"
+                className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors resize-none"
               />
             </div>
           </div>
@@ -327,17 +327,17 @@ export default function UploadPage() {
               <label className="block text-sm font-semibold mb-3">
                 Preview
               </label>
-              <div className="border border-black/10">
+              <div className="border border-black/10 dark:border-white/10">
                 <div className="bg-black text-white p-4 font-mono text-sm">
                   <pre className="whitespace-pre-wrap break-words">
                     {formData.code}
                   </pre>
                 </div>
-                <div className="p-4 bg-black/5">
+                <div className="p-4 bg-black/5 dark:bg-white/5">
                   <h3 className="font-semibold mb-1">
                     {formData.name || "Untitled Pattern"}
                   </h3>
-                  <p className="text-sm text-black/60">
+                  <p className="text-sm text-black/60 dark:text-white/60">
                     {formData.description || "No description"}
                   </p>
                   {formData.tags && (
@@ -345,7 +345,7 @@ export default function UploadPage() {
                       {formData.tags.split(",").map((tag, idx) => (
                         <span
                           key={idx}
-                          className="text-xs px-2 py-1 border border-black/10 text-black/70"
+                          className="text-xs px-2 py-1 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70"
                         >
                           {tag.trim()}
                         </span>
@@ -366,8 +366,8 @@ export default function UploadPage() {
               }
               className={`px-8 py-3 font-semibold transition-colors ${
                 !formData.code.trim() || !formData.name.trim() || isUploading
-                  ? "bg-black/20 text-black/40 cursor-not-allowed"
-                  : "bg-black text-white hover:bg-black/90"
+                  ? "bg-black/20 dark:bg-white/10 text-black/40 dark:text-white/40 cursor-not-allowed"
+                  : "bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90"
               }`}
             >
               {isUploading ? "Uploading..." : "Share Pattern"}
@@ -375,7 +375,7 @@ export default function UploadPage() {
 
             <Link
               href="/"
-              className="px-8 py-3 border border-black/20 hover:border-black transition-colors"
+              className="px-8 py-3 border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white transition-colors"
             >
               Cancel
             </Link>

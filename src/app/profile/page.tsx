@@ -139,7 +139,7 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white text-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white flex items-center justify-center">
         <p>Loading profile...</p>
       </div>
     );
@@ -152,9 +152,9 @@ export default function ProfilePage() {
   const username = user.user_metadata?.username || user.email?.split("@")[0];
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white">
       {/* Header */}
-      <header className="border-b border-black/10 bg-white sticky top-0 z-10">
+      <header className="border-b border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight ml-12 lg:ml-0">
@@ -163,13 +163,13 @@ export default function ProfilePage() {
             <div className="flex items-center gap-2 sm:gap-3">
               <Link
                 href="/upload"
-                className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
               >
                 Upload
               </Link>
               <Link
                 href="/"
-                className="hidden sm:block px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+                className="hidden sm:block px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
               >
                 Browse
               </Link>
@@ -187,8 +187,8 @@ export default function ProfilePage() {
             </div>
             <div>
               <h2 className="text-3xl font-bold">{username}</h2>
-              <p className="text-black/60">{user.email}</p>
-              <div className="flex gap-4 text-sm text-black/50 mt-1">
+              <p className="text-black/60 dark:text-white/60">{user.email}</p>
+              <div className="flex gap-4 text-sm text-black/50 dark:text-white/50 mt-1">
                 <p>
                   {patterns.length}{" "}
                   {patterns.length === 1 ? "pattern" : "patterns"} uploaded
@@ -204,32 +204,32 @@ export default function ProfilePage() {
         </div>
 
         {/* Tabs */}
-        <div className="mb-8 border-b border-black/10">
+        <div className="mb-8 border-b border-black/10 dark:border-white/10">
           <div className="flex gap-4 sm:gap-8">
             <button
               onClick={() => setActiveTab("uploaded")}
               className={`pb-4 px-2 text-lg font-semibold transition-colors relative ${
                 activeTab === "uploaded"
-                  ? "text-black"
-                  : "text-black/40 hover:text-black/60"
+                  ? "text-black dark:text-white"
+                  : "text-black/40 dark:text-white/40 hover:text-black/60 dark:text-white/60"
               }`}
             >
               Uploaded Patterns
               {activeTab === "uploaded" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white" />
               )}
             </button>
             <button
               onClick={() => setActiveTab("liked")}
               className={`pb-4 px-2 text-lg font-semibold transition-colors relative ${
                 activeTab === "liked"
-                  ? "text-black"
-                  : "text-black/40 hover:text-black/60"
+                  ? "text-black dark:text-white"
+                  : "text-black/40 dark:text-white/40 hover:text-black/60 dark:text-white/60"
               }`}
             >
               Liked Patterns
               {activeTab === "liked" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white" />
               )}
             </button>
           </div>
@@ -239,11 +239,11 @@ export default function ProfilePage() {
         {activeTab === "uploaded" && (
           <div>
             {patterns.length === 0 ? (
-              <div className="text-center py-20 border border-black/10">
-                <p className="text-lg text-black/40 mb-4">No patterns yet</p>
+              <div className="text-center py-20 border border-black/10 dark:border-white/10">
+                <p className="text-lg text-black/40 dark:text-white/40 mb-4">No patterns yet</p>
                 <Link
                   href="/upload"
-                  className="inline-block px-6 py-3 bg-black text-white hover:bg-black/90 transition-colors"
+                  className="inline-block px-6 py-3 bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 transition-colors"
                 >
                   Upload Your First Pattern
                 </Link>
@@ -253,7 +253,7 @@ export default function ProfilePage() {
                 {patterns.map((pattern) => (
                   <div
                     key={pattern.id}
-                    className="border border-black/10 hover:border-black transition-all group"
+                    className="border border-black/10 dark:border-white/10 hover:border-black dark:hover:border-white transition-all group"
                   >
                     <Link href={`/pattern/${pattern.id}`}>
                       {/* Code Preview */}
@@ -317,7 +317,7 @@ export default function ProfilePage() {
                         </h3>
                       </Link>
 
-                      <p className="text-sm text-black/60 mb-3 line-clamp-2">
+                      <p className="text-sm text-black/60 dark:text-white/60 mb-3 line-clamp-2">
                         {pattern.description}
                       </p>
 
@@ -325,7 +325,7 @@ export default function ProfilePage() {
                         {pattern.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-xs px-2 py-1 border border-black/10 text-black/70"
+                            className="text-xs px-2 py-1 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70"
                           >
                             {tag}
                           </span>
@@ -333,10 +333,10 @@ export default function ProfilePage() {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex gap-2 pt-3 border-t border-black/10">
+                      <div className="flex gap-2 pt-3 border-t border-black/10 dark:border-white/10">
                         <Link
                           href={`/pattern/${pattern.id}`}
-                          className="flex-1 py-2 text-sm text-center border border-black/20 hover:border-black hover:bg-black hover:text-white transition-colors"
+                          className="flex-1 py-2 text-sm text-center border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                         >
                           View
                         </Link>
@@ -347,7 +347,7 @@ export default function ProfilePage() {
                             handleDelete(pattern.id);
                           }}
                           disabled={deletingId === pattern.id}
-                          className={`flex-1 py-2 text-sm border border-black/20 hover:border-black hover:bg-black hover:text-white transition-colors ${
+                          className={`flex-1 py-2 text-sm border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors ${
                             deletingId === pattern.id
                               ? "opacity-50 cursor-not-allowed"
                               : ""
@@ -368,13 +368,13 @@ export default function ProfilePage() {
         {activeTab === "liked" && (
           <div>
             {likedPatterns.length === 0 ? (
-              <div className="text-center py-20 border border-black/10">
-                <p className="text-lg text-black/40 mb-4">
+              <div className="text-center py-20 border border-black/10 dark:border-white/10">
+                <p className="text-lg text-black/40 dark:text-white/40 mb-4">
                   No liked patterns yet
                 </p>
                 <Link
                   href="/"
-                  className="inline-block px-6 py-3 bg-black text-white hover:bg-black/90 transition-colors"
+                  className="inline-block px-6 py-3 bg-black dark:bg-white text-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 transition-colors"
                 >
                   Explore Patterns
                 </Link>
@@ -384,7 +384,7 @@ export default function ProfilePage() {
                 {likedPatterns.map((pattern) => (
                   <div
                     key={pattern.id}
-                    className="border border-black/10 hover:border-black transition-all group"
+                    className="border border-black/10 dark:border-white/10 hover:border-black dark:hover:border-white transition-all group"
                   >
                     <Link href={`/pattern/${pattern.id}`}>
                       {/* Code Preview */}
@@ -447,13 +447,13 @@ export default function ProfilePage() {
                           <h3 className="font-semibold hover:underline cursor-pointer">
                             {pattern.name}
                           </h3>
-                          <span className="text-xs text-black/50 ml-2">
+                          <span className="text-xs text-black/50 dark:text-white/50 ml-2">
                             @{pattern.author}
                           </span>
                         </div>
                       </Link>
 
-                      <p className="text-sm text-black/60 mb-3 line-clamp-2">
+                      <p className="text-sm text-black/60 dark:text-white/60 mb-3 line-clamp-2">
                         {pattern.description}
                       </p>
 
@@ -461,7 +461,7 @@ export default function ProfilePage() {
                         {pattern.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-xs px-2 py-1 border border-black/10 text-black/70"
+                            className="text-xs px-2 py-1 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70"
                           >
                             {tag}
                           </span>
@@ -469,10 +469,10 @@ export default function ProfilePage() {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex gap-2 pt-3 border-t border-black/10">
+                      <div className="flex gap-2 pt-3 border-t border-black/10 dark:border-white/10">
                         <Link
                           href={`/pattern/${pattern.id}`}
-                          className="flex-1 py-2 text-sm text-center border border-black/20 hover:border-black hover:bg-black hover:text-white transition-colors"
+                          className="flex-1 py-2 text-sm text-center border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                         >
                           View
                         </Link>
@@ -482,7 +482,7 @@ export default function ProfilePage() {
                             e.stopPropagation();
                             handleUnlike(pattern.id);
                           }}
-                          className="flex-1 py-2 text-sm border border-black/20 hover:border-black hover:bg-black hover:text-white transition-colors"
+                          className="flex-1 py-2 text-sm border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                         >
                           Unlike
                         </button>

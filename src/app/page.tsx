@@ -381,9 +381,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white">
       {/* Header */}
-      <header className="border-b border-black/10 bg-white sticky top-0 z-10">
+      <header className="border-b border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between mb-4 sm:mb-6">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight ml-12 lg:ml-0">
@@ -394,7 +394,7 @@ export default function Home() {
                 <>
                   <Link
                     href="/upload"
-                    className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+                    className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                   >
                     Upload
                   </Link>
@@ -404,13 +404,13 @@ export default function Home() {
                 <>
                   <Link
                     href="/upload"
-                    className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+                    className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                   >
                     Upload
                   </Link>
                   <button
                     onClick={() => setShowAuthModal(true)}
-                    className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black hover:bg-black hover:text-white transition-colors"
+                    className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
                   >
                     Sign In
                   </button>
@@ -426,7 +426,7 @@ export default function Home() {
               placeholder="Search patterns, tags, categories..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 border border-black/20 focus:border-black focus:outline-none transition-colors"
+              className="w-full px-4 py-3 border border-black/20 dark:border-white/20 focus:border-black dark:focus:border-white focus:outline-none transition-colors"
             />
             <svg
               className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5"
@@ -448,13 +448,13 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Demo Mode Banner */}
         {isDemoMode && (
-          <div className="mb-6 bg-black/5 border border-black/10 px-4 py-3 text-center sm:text-left">
-            <p className="text-xs sm:text-sm text-black/70">
+          <div className="mb-6 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-4 py-3 text-center sm:text-left">
+            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70">
               📝 Demo Mode: Showing example patterns. Configure Supabase to
               store real patterns. See{" "}
               <a
                 href="/SETUP.md"
-                className="underline hover:text-black"
+                className="underline hover:text-black dark:hover:text-white"
                 target="_blank"
               >
                 SETUP.md
@@ -471,8 +471,8 @@ export default function Home() {
               onClick={() => setSelectedCategory(category)}
               className={`px-3 sm:px-4 py-2 text-sm whitespace-nowrap transition-colors ${
                 selectedCategory === category
-                  ? "bg-black text-white"
-                  : "border border-black/20 hover:border-black"
+                  ? "bg-black dark:bg-white text-white dark:text-black"
+                  : "border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white"
               }`}
             >
               {category}
@@ -482,7 +482,7 @@ export default function Home() {
 
         {/* Sort Mode Tabs */}
         <div className="flex items-center gap-2 sm:gap-3 mb-6 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <span className="text-sm text-black/50 mr-1 whitespace-nowrap">
+          <span className="text-sm text-black/50 dark:text-white/50 mr-1 whitespace-nowrap">
             Sort:
           </span>
           {[
@@ -495,8 +495,8 @@ export default function Home() {
               onClick={() => setSortMode(mode.key)}
               className={`px-3 sm:px-4 py-2 text-sm whitespace-nowrap transition-colors ${
                 sortMode === mode.key
-                  ? "bg-black text-white"
-                  : "border border-black/20 hover:border-black"
+                  ? "bg-black dark:bg-white text-white dark:text-black"
+                  : "border border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white"
               }`}
             >
               {mode.label}
@@ -505,7 +505,7 @@ export default function Home() {
         </div>
 
         {/* Results Count */}
-        <div className="mb-6 text-sm text-black/60">
+        <div className="mb-6 text-sm text-black/60 dark:text-white/60">
           {isLoading ? (
             "Loading patterns..."
           ) : (
@@ -518,7 +518,7 @@ export default function Home() {
 
         {/* Sample Grid */}
         {isLoading ? (
-          <div className="text-center py-20 text-black/40">
+          <div className="text-center py-20 text-black/40 dark:text-white/40">
             <p className="text-lg">Loading patterns...</p>
           </div>
         ) : (
@@ -527,7 +527,7 @@ export default function Home() {
               <Link
                 key={sample.id}
                 href={`/pattern/${sample.id}`}
-                className="border border-black/10 hover:border-black transition-all group cursor-pointer block"
+                className="border border-black/10 dark:border-white/10 hover:border-black dark:hover:border-white transition-all group cursor-pointer block"
               >
                 {/* Code Preview */}
                 <div className="relative h-32 overflow-hidden">
@@ -592,18 +592,18 @@ export default function Home() {
                           e.stopPropagation();
                           window.location.href = `/user/${sample.user_id}`;
                         }}
-                        className="text-xs text-black/50 ml-2 hover:text-black hover:underline cursor-pointer"
+                        className="text-xs text-black/50 dark:text-white/50 ml-2 hover:text-black dark:hover:text-white hover:underline cursor-pointer"
                       >
                         @{sample.author}
                       </span>
                     ) : (
-                      <span className="text-xs text-black/50 ml-2">
+                      <span className="text-xs text-black/50 dark:text-white/50 ml-2">
                         @{sample.author}
                       </span>
                     )}
                   </div>
 
-                  <p className="text-sm text-black/60 mb-3 line-clamp-2">
+                  <p className="text-sm text-black/60 dark:text-white/60 mb-3 line-clamp-2">
                     {sample.description}
                   </p>
 
@@ -611,7 +611,7 @@ export default function Home() {
                     {sample.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-2 py-1 border border-black/10 text-black/70"
+                        className="text-xs px-2 py-1 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70"
                       >
                         {tag}
                       </span>
@@ -625,7 +625,7 @@ export default function Home() {
                         onClick={(e) =>
                           handleLike(e, sample.id, sample.is_liked || false)
                         }
-                        className="flex items-center gap-1.5 text-sm text-black/70 hover:text-black transition-colors"
+                        className="flex items-center gap-1.5 text-sm text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors"
                         title={sample.is_liked ? "Unlike" : "Like"}
                       >
                         <svg
@@ -679,7 +679,7 @@ export default function Home() {
         )}
 
         {!isLoading && filteredSamples.length === 0 && (
-          <div className="text-center py-20 text-black/40">
+          <div className="text-center py-20 text-black/40 dark:text-white/40">
             <p className="text-lg">No patterns found</p>
             <p className="text-sm mt-2">Try adjusting your search or filters</p>
           </div>
@@ -687,16 +687,16 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-black/10 mt-16">
+      <footer className="border-t border-black/10 dark:border-white/10 mt-16">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between text-sm text-black/60">
+          <div className="flex items-center justify-between text-sm text-black/60 dark:text-white/60">
             <p>Strudel Patterns Library</p>
             <div className="flex gap-6">
               <a
                 href="https://strudel.cc"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-black transition-colors"
+                className="hover:text-black dark:hover:text-white transition-colors"
               >
                 Strudel REPL
               </a>
@@ -704,7 +704,7 @@ export default function Home() {
                 href="https://strudel.cc/learn"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-black transition-colors"
+                className="hover:text-black dark:hover:text-white transition-colors"
               >
                 Learn
               </a>
@@ -712,7 +712,7 @@ export default function Home() {
                 href="https://codeberg.org/uzu/strudel/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-black transition-colors"
+                className="hover:text-black dark:hover:text-white transition-colors"
               >
                 Codeberg
               </a>
