@@ -4,10 +4,13 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn("Supabase credentials not found. Using demo mode.");
+  console.warn("Supabase credentials not found. Authentication features will be disabled.");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create client only if credentials are available, otherwise null
+export const supabase = (supabaseUrl && supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 export interface Pattern {
   id: string;
